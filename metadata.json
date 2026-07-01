@@ -1,0 +1,8 @@
+{
+  "name": "JFC Family Restaurant",
+  "description": "A premium, high-class website for JFC Family Restaurant in Raj Nagar Extension, Ghaziabad, famous for its delicious Chaap, cozy seating, and vibrant counter bhaiya vibe.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
