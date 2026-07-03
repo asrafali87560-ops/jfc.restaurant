@@ -12,6 +12,14 @@ export interface MenuItem {
   isHighProtein?: boolean;
   spiceLevel: 1 | 2 | 3; // 1 = Mild, 2 = Medium, 3 = Spicy
   proteinGrams?: number;
+  nutrition?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    allergens: string[];
+    ingredients: string[];
+  };
 }
 
 export interface MenuCategory {

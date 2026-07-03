@@ -1,14 +1,18 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Flame, Sparkles, UtensilsCrossed, Cookie, GlassWater, FlameKindling, Info, Plus, Star, CheckCircle, SlidersHorizontal, Activity } from 'lucide-react';
+import { Search, Flame, Sparkles, UtensilsCrossed, Cookie, GlassWater, FlameKindling, Info, Plus, Star, CheckCircle, SlidersHorizontal, Activity, ChevronDown, ChevronUp, AlertCircle, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MENU_CATEGORIES, MENU_ITEMS } from '../data/menuData';
 import { MenuItem } from '../types';
+import { Language, translations } from '../data/translations';
 
 interface MenuSectionProps {
   onAddItemToCart: (item: MenuItem, quantity: number) => void;
+  lang: Language;
 }
 
-export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
+export default function MenuSection({ onAddItemToCart, lang }: MenuSectionProps) {
+  const t = translations[lang].menu;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showOnlyHighProtein, setShowOnlyHighProtein] = useState(false);
@@ -33,7 +37,7 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
 
   const handleAddToCart = (item: MenuItem) => {
     onAddItemToCart(item, 1);
-    setAddedItemMessage(item.name);
+    setAddedItemMessage(lang === 'hi' && item.hindiName ? item.hindiName : item.name);
     setTimeout(() => {
       setAddedItemMessage(null);
     }, 2000);
@@ -72,13 +76,20 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
   const activeCategoryDetails = useMemo(() => {
     if (selectedCategory === 'all') {
       return {
-        name: 'The Complete Grand Menu',
+        name: lang === 'en' ? 'The Complete Grand Menu' : 'सम्पूर्ण व्यंजन सूची',
         hindiName: 'सम्पूर्ण व्यंजन सूची',
-        description: 'Explore our complete spectrum of luxurious culinary crafts. Handcrafted starters, famous soya chaaps, slow-simmered rich curries, and refreshing house blends.'
+        description: lang === 'en' 
+          ? 'Explore our complete spectrum of luxurious culinary crafts. Handcrafted starters, famous soya chaaps, slow-simmered rich curries, and refreshing house blends.'
+          : 'हमारे सभी व्यंजनों की शाही श्रेणियों का आनंद लें। कड़क तंदूरी स्टार्टर्स, सुप्रसिद्ध सोया चाप, मलाईदार कढ़ाई करी और शीतल हाउस ब्लेंड्स।'
       };
     }
-    return MENU_CATEGORIES.find(c => c.id === selectedCategory) || MENU_CATEGORIES[0];
-  }, [selectedCategory]);
+    const cat = MENU_CATEGORIES.find(c => c.id === selectedCategory) || MENU_CATEGORIES[0];
+    return {
+      name: lang === 'hi' && cat.hindiName ? cat.hindiName : cat.name,
+      hindiName: cat.hindiName || '',
+      description: cat.description
+    };
+  }, [selectedCategory, lang]);
 
   return (
     <section id="menu" className="py-24 bg-[#0a0907] relative border-t border-white/5">
@@ -88,9 +99,9 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#cca43b]">Explore & Order</span>
+          <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#cca43b]">{t.tag}</span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-2">
-            The Royal Recipe Repertory
+            {t.title}
           </h2>
           <div className="h-0.5 w-20 bg-gradient-to-r from-transparent via-[#cca43b] to-transparent mx-auto mt-4" />
         </div>
@@ -106,7 +117,7 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
             >
               <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0" />
               <div className="text-left">
-                <p className="text-xs font-bold font-serif">Added to Meal Tray!</p>
+                <p className="text-xs font-bold font-serif">{t.addedToTray}</p>
                 <p className="text-[10px] text-gray-400 truncate max-w-[200px]">{addedItemMessage}</p>
               </div>
             </motion.div>
@@ -126,7 +137,7 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search tender malai chaap, butter naan, paneer curry..."
+                placeholder={t.searchPlaceholder}
                 className="w-full bg-[#161412] border border-white/5 hover:border-white/10 focus:border-[#cca43b]/50 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none transition-colors"
                 id="menu-search-input"
               />
@@ -140,10 +151,10 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                 className="w-full bg-[#161412] border border-white/5 hover:border-white/10 focus:border-[#cca43b]/50 rounded-xl py-3.5 px-4 text-sm text-white focus:outline-none transition-colors appearance-none cursor-pointer"
                 id="menu-sort-select"
               >
-                <option value="default">Sort by: Default Chef Order</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="popular">Most Popular Choice</option>
+                <option value="default">{t.sortBy}: {t.defaultSort}</option>
+                <option value="price-asc">{t.priceLowHigh}</option>
+                <option value="price-desc">{t.priceHighLow}</option>
+                <option value="popular">{t.mostPopular}</option>
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-xs">
                 ▼
@@ -156,9 +167,9 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
           <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/5">
             
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="text-xs font-mono text-gray-500 flex items-center gap-1">
+              <span className="text-xs font-mono text-gray-500 flex items-center gap-1 uppercase">
                 <SlidersHorizontal className="h-3 w-3" />
-                FILTERS:
+                {t.filters}:
               </span>
 
               {/* High Protein Switch */}
@@ -166,12 +177,12 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                 onClick={() => setShowOnlyHighProtein(!showOnlyHighProtein)}
                 className={`px-3.5 py-2 rounded-lg text-xs font-medium uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
                   showOnlyHighProtein 
-                    ? 'bg-amber-500/20 text-[#cca43b] border border-amber-500/30' 
+                    ? 'bg-[#cca43b]/20 text-[#cca43b] border border-[#cca43b]/30 font-bold' 
                     : 'bg-[#161412] text-gray-400 border border-transparent hover:border-white/5 hover:text-white'
                 }`}
               >
                 <Activity className="h-3.5 w-3.5" />
-                High Protein 💪
+                {t.highProtein}
               </button>
 
               {/* Chef Special Switch */}
@@ -184,13 +195,13 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                 }`}
               >
                 <Star className="h-3.5 w-3.5 fill-current" />
-                Chef’s Best 🌟
+                {t.chefsBest}
               </button>
             </div>
 
             {/* Spice levels */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-mono text-gray-500 mr-1">SPICE LEVEL:</span>
+              <span className="text-xs font-mono text-gray-500 mr-1 uppercase">{t.spiceLevel}:</span>
               {['all', 1, 2, 3].map((level) => (
                 <button
                   key={level}
@@ -201,7 +212,7 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                       : 'bg-[#161412] text-gray-400 border border-transparent hover:bg-white/3 hover:text-white'
                   }`}
                 >
-                  {level === 'all' ? 'ALL' : '🌶️'.repeat(level as number)}
+                  {level === 'all' ? (lang === 'en' ? 'ALL' : 'सभी') : '🌶️'.repeat(level as number)}
                 </button>
               ))}
             </div>
@@ -226,10 +237,10 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
             </div>
             <div>
               <span className={`block text-xs font-semibold uppercase tracking-wider ${selectedCategory === 'all' ? 'text-[#0f0e0c]' : 'text-white'}`}>
-                Full Repertory
+                {t.fullRepertory}
               </span>
               <span className={`text-[10px] block leading-none mt-0.5 ${selectedCategory === 'all' ? 'text-[#0f0e0c]/70' : 'text-gray-500'}`}>
-                सम्पूर्ण सूची
+                {t.hindiFullRepertory}
               </span>
             </div>
           </button>
@@ -251,7 +262,7 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                 </div>
                 <div>
                   <span className={`block text-xs font-semibold uppercase tracking-wider ${isActive ? 'text-[#0f0e0c]' : 'text-white'}`}>
-                    {cat.name.replace('Legendary ', '').replace(' Specialties', '')}
+                    {lang === 'hi' && cat.hindiName ? cat.hindiName : cat.name.replace('Legendary ', '').replace(' Specialties', '')}
                   </span>
                   <span className={`text-[10px] block leading-none mt-0.5 ${isActive ? 'text-[#0f0e0c]/70' : 'text-gray-500'}`}>
                     {cat.hindiName}
@@ -266,12 +277,14 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
         {/* Selected Category Banner Card */}
         <div className="bg-[#13110e] border border-[#cca43b]/15 rounded-2xl p-6 sm:p-8 mb-10 text-left relative overflow-hidden">
           <div className="absolute top-0 right-0 w-48 h-48 bg-[#cca43b]/5 rounded-full blur-3xl" />
-          <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500">CATEGORY FOCUS</span>
+          <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500">{t.categoryFocus}</span>
           <h3 className="font-serif text-xl sm:text-2xl font-bold text-white mt-1.5 flex items-center gap-2">
             {activeCategoryDetails.name}
-            <span className="text-xs sm:text-sm font-sans font-normal text-gray-500">
-              ({activeCategoryDetails.hindiName})
-            </span>
+            {activeCategoryDetails.hindiName && selectedCategory !== 'all' && (
+              <span className="text-xs sm:text-sm font-sans font-normal text-gray-500">
+                ({activeCategoryDetails.hindiName})
+              </span>
+            )}
           </h3>
           <p className="text-xs sm:text-sm text-gray-400 mt-2 max-w-4xl font-light leading-relaxed">
             {activeCategoryDetails.description}
@@ -282,110 +295,13 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item) => (
-              <motion.div
+              <MenuItemCard
                 key={item.id}
-                layout
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }}
-                className="bg-[#12100e] border border-white/5 hover:border-[#cca43b]/20 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between text-left group"
-              >
-                {/* Image & Badges */}
-                <div className="relative aspect-video w-full overflow-hidden bg-white/2 border-b border-white/5">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
-                  
-                  {/* Spice indicator overlay */}
-                  <div className="absolute bottom-3 left-3 bg-[#0f0e0c]/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-mono text-white flex items-center gap-1 select-none">
-                    <span>SPICE:</span>
-                    <span className="text-red-500">{'🌶️'.repeat(item.spiceLevel)}</span>
-                  </div>
-
-                  {/* Veg indicator dot */}
-                  <div className="absolute top-3 left-3 bg-[#0f0e0c]/80 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center border border-emerald-500/30">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                  </div>
-
-                  {/* Tag badge (Top Right) */}
-                  <div className="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
-                    {item.isChefSpecial && (
-                      <span className="bg-gradient-to-r from-yellow-500 to-amber-600 text-[#0f0e0c] text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-sans">
-                        CHEF SPECIAL 🌟
-                      </span>
-                    )}
-                    {item.isPopular && (
-                      <span className="bg-[#0f0e0c]/90 border border-[#cca43b]/40 text-[#cca43b] text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-mono">
-                        MOST POPULAR 🔥
-                      </span>
-                    )}
-                    {item.isHighProtein && (
-                      <span className="bg-red-600 text-white text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-mono flex items-center gap-1">
-                        HIGH PROTEIN 💪
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-start gap-2">
-                      <div>
-                        <h4 className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#cca43b] transition-colors leading-snug">
-                          {item.name}
-                        </h4>
-                        {item.hindiName && (
-                          <span className="text-xs text-gray-500 block leading-none font-sans font-light mt-0.5">
-                            {item.hindiName}
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-base font-mono font-bold text-[#cca43b] shrink-0">
-                        ₹{item.price}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-gray-400 font-light leading-relaxed line-clamp-3">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Footer details */}
-                  <div className="pt-3.5 border-t border-white/5 flex items-center justify-between">
-                    
-                    {/* Macros detail */}
-                    <div className="text-[10px] font-mono text-gray-500">
-                      {item.proteinGrams ? (
-                        <span className="flex items-center gap-1 text-emerald-400 font-semibold">
-                          <Activity className="h-3 w-3" />
-                          {item.proteinGrams}g Soy Protein
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-gray-600">
-                          <Info className="h-3 w-3" /> Fresh Family Fare
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Add to cart CTA */}
-                    <button
-                      onClick={() => handleAddToCart(item)}
-                      className="bg-white/5 hover:bg-[#cca43b] border border-[#cca43b]/40 hover:border-[#cca43b] text-[#cca43b] hover:text-[#0f0e0c] font-bold text-[10px] uppercase tracking-wider py-2 px-3.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm shadow-[#cca43b]/5"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      Add to Tray
-                    </button>
-
-                  </div>
-
-                </div>
-
-              </motion.div>
+                item={item}
+                onAddToCart={handleAddToCart}
+                lang={lang}
+                t={t}
+              />
             ))}
           </AnimatePresence>
 
@@ -394,9 +310,9 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
             <div className="col-span-full py-16 text-center space-y-4 border border-dashed border-white/10 rounded-2xl bg-white/1">
               <span className="text-4xl block">🔍</span>
               <div className="space-y-1 max-w-sm mx-auto">
-                <h4 className="text-white font-serif font-bold text-base">No culinary match found</h4>
+                <h4 className="text-white font-serif font-bold text-base">{t.noMatch}</h4>
                 <p className="text-xs text-gray-400 font-light leading-normal">
-                  Try adjusting your search terms or filters (e.g. searching "malai" or toggling off specific switches).
+                  {t.noMatchDesc}
                 </p>
               </div>
               <button
@@ -409,7 +325,7 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
                 }}
                 className="text-xs text-[#cca43b] font-mono border-b border-[#cca43b] hover:text-white hover:border-white transition-all cursor-pointer py-1"
               >
-                Reset All Filters
+                {t.resetFilters}
               </button>
             </div>
           )}
@@ -417,5 +333,245 @@ export default function MenuSection({ onAddItemToCart }: MenuSectionProps) {
 
       </div>
     </section>
+  );
+}
+
+/* Sub-component to manage its own expandable accordion state */
+interface MenuItemCardProps {
+  key?: string | number;
+  item: MenuItem;
+  onAddToCart: (item: MenuItem) => void;
+  lang: Language;
+  t: any;
+}
+
+function MenuItemCard({ item, onAddToCart, lang, t }: MenuItemCardProps) {
+  const [isNutritionOpen, setIsNutritionOpen] = useState(false);
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4 }}
+      className="bg-[#12100e] border border-white/5 hover:border-[#cca43b]/20 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between text-left group"
+    >
+      {/* Image & Badges */}
+      <div className="relative aspect-video w-full overflow-hidden bg-white/2 border-b border-white/5">
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-500"
+          referrerPolicy="no-referrer"
+        />
+        
+        {/* Spice indicator overlay */}
+        <div className="absolute bottom-3 left-3 bg-[#0f0e0c]/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-mono text-white flex items-center gap-1 select-none">
+          <span>{t.spice}</span>
+          <span className="text-red-500">{'🌶️'.repeat(item.spiceLevel)}</span>
+        </div>
+
+        {/* Veg indicator dot */}
+        <div className="absolute top-3 left-3 bg-[#0f0e0c]/80 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center border border-emerald-500/30">
+          <div className="h-2 w-2 rounded-full bg-emerald-500" />
+        </div>
+
+        {/* Tag badge (Top Right) */}
+        <div className="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+          {item.isChefSpecial && (
+            <span className="bg-gradient-to-r from-yellow-500 to-amber-600 text-[#0f0e0c] text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-sans">
+              {t.chefSpecialBadge}
+            </span>
+          )}
+          {item.isPopular && (
+            <span className="bg-[#0f0e0c]/90 border border-[#cca43b]/40 text-[#cca43b] text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-mono">
+              {t.mostPopularBadge}
+            </span>
+          )}
+          {item.isHighProtein && (
+            <span className="bg-red-600 text-white text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-mono flex items-center gap-1">
+              {t.highProteinBadge}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+        <div className="space-y-2">
+          <div className="flex justify-between items-start gap-2">
+            <div>
+              <h4 className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#cca43b] transition-colors leading-snug">
+                {lang === 'hi' && item.hindiName ? item.hindiName : item.name}
+              </h4>
+              {item.hindiName && lang === 'en' && (
+                <span className="text-xs text-gray-500 block leading-none font-sans font-light mt-0.5">
+                  {item.hindiName}
+                </span>
+              )}
+            </div>
+            <span className="text-base font-mono font-bold text-[#cca43b] shrink-0">
+              ₹{item.price}
+            </span>
+          </div>
+
+          <p className="text-xs text-gray-400 font-light leading-relaxed">
+            {item.description}
+          </p>
+        </div>
+
+        {/* Accordion: Nutritional Information (Task 4) */}
+        <div className="border-t border-white/5 pt-2.5">
+          <button
+            onClick={() => setIsNutritionOpen(!isNutritionOpen)}
+            className="w-full flex items-center justify-between text-left text-gray-500 hover:text-[#cca43b] transition-colors text-[10px] font-mono tracking-wider uppercase py-1 focus:outline-none cursor-pointer"
+          >
+            <span className="flex items-center gap-1">
+              <Activity className="h-3.5 w-3.5 text-amber-500" />
+              {lang === 'en' ? 'Nutritional Facts & Ingredients' : 'पोषण मूल्य और सामग्री'}
+            </span>
+            {isNutritionOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          </button>
+
+          <AnimatePresence>
+            {isNutritionOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden bg-[#161412]/60 border border-white/5 rounded-xl mt-2 p-3 space-y-3"
+              >
+                {item.nutrition ? (
+                  <>
+                    {/* Macros Grid */}
+                    <div className="grid grid-cols-4 gap-2 text-center">
+                      <div className="bg-white/2 rounded p-1.5 border border-white/5">
+                        <span className="text-[8px] text-gray-500 block font-mono">CALORIES</span>
+                        <strong className="text-xs text-white font-mono">{item.nutrition.calories} kcal</strong>
+                      </div>
+                      <div className="bg-emerald-500/5 rounded p-1.5 border border-emerald-500/10">
+                        <span className="text-[8px] text-emerald-500/80 block font-mono">PROTEIN</span>
+                        <strong className="text-xs text-emerald-400 font-mono">{item.nutrition.protein}g</strong>
+                      </div>
+                      <div className="bg-amber-500/5 rounded p-1.5 border border-amber-500/10">
+                        <span className="text-[8px] text-amber-500/80 block font-mono">CARBS</span>
+                        <strong className="text-xs text-amber-400 font-mono">{item.nutrition.carbs}g</strong>
+                      </div>
+                      <div className="bg-red-500/5 rounded p-1.5 border border-red-500/10">
+                        <span className="text-[8px] text-red-500/80 block font-mono">FAT</span>
+                        <strong className="text-xs text-red-400 font-mono">{item.nutrition.fat}g</strong>
+                      </div>
+                    </div>
+
+                    {/* Progress visualizer of macros ratio */}
+                    <div className="space-y-1 pt-1">
+                      <div className="flex h-1.5 rounded-full overflow-hidden bg-white/5">
+                        <div 
+                          className="bg-emerald-400" 
+                          style={{ width: `${(item.nutrition.protein * 4 / item.nutrition.calories) * 100}%` }} 
+                          title="Protein"
+                        />
+                        <div 
+                          className="bg-amber-400" 
+                          style={{ width: `${(item.nutrition.carbs * 4 / item.nutrition.calories) * 100}%` }} 
+                          title="Carbs"
+                        />
+                        <div 
+                          className="bg-red-400" 
+                          style={{ width: `${(item.nutrition.fat * 9 / item.nutrition.calories) * 100}%` }} 
+                          title="Fat"
+                        />
+                      </div>
+                      <div className="flex justify-between text-[7px] text-gray-500 font-mono">
+                        <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Protein</span>
+                        <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> Carbs</span>
+                        <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded-full bg-red-400" /> Fat</span>
+                      </div>
+                    </div>
+
+                    {/* Allergens warning */}
+                    <div className="text-[9px] text-left">
+                      <span className="text-gray-500 font-mono block uppercase tracking-wide">ALLERGENS:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {item.nutrition.allergens.map((all, i) => (
+                          <span key={i} className="bg-red-500/10 border border-red-500/25 text-red-400 text-[8px] font-mono px-2 py-0.5 rounded flex items-center gap-1">
+                            <AlertCircle className="h-2 w-2" />
+                            {all}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Key Ingredients */}
+                    <div className="text-[9px] text-left">
+                      <span className="text-gray-500 font-mono block uppercase tracking-wide">KEY INGREDIENTS:</span>
+                      <p className="text-gray-300 font-light leading-relaxed mt-1 text-[9px] leading-snug">
+                        {item.nutrition.ingredients.join(', ')}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  /* Standard fallback nutrition values */
+                  <div className="space-y-2 py-1 text-center">
+                    <p className="text-[9px] text-gray-500 italic leading-snug">
+                      {lang === 'en' 
+                        ? 'Standard restaurant nutritional values. Made with premium, hygienically prepared pure vegetarian ingredients.'
+                        : 'मानक रेस्टोरेंट पोषण मूल्य। प्रीमियम और स्वच्छ रूप से तैयार शुद्ध शाकाहारी सामग्री से निर्मित।'}
+                    </p>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="bg-white/2 rounded p-1">
+                        <span className="text-[7px] text-gray-500 block font-mono">EST. PROTEIN</span>
+                        <strong className="text-[10px] text-emerald-400 font-mono">
+                          {item.proteinGrams ? `${item.proteinGrams}g` : '10-15g'}
+                        </strong>
+                      </div>
+                      <div className="bg-white/2 rounded p-1">
+                        <span className="text-[7px] text-gray-500 block font-mono">100% VEG</span>
+                        <strong className="text-[10px] text-[#cca43b] font-mono">✓ Green Dot</strong>
+                      </div>
+                      <div className="bg-white/2 rounded p-1">
+                        <span className="text-[7px] text-gray-500 block font-mono">AMUL DAIRY</span>
+                        <strong className="text-[10px] text-blue-400 font-mono">Fresh</strong>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Footer details */}
+        <div className="pt-3.5 border-t border-white/5 flex items-center justify-between">
+          
+          {/* Protein detail badge */}
+          <div className="text-[10px] font-mono text-gray-500">
+            {item.proteinGrams ? (
+              <span className="flex items-center gap-1 text-emerald-400 font-semibold">
+                <Activity className="h-3 w-3" />
+                {item.proteinGrams}{t.proteinGrams}
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-gray-600">
+                <Info className="h-3 w-3" /> {t.freshFare}
+              </span>
+            )}
+          </div>
+
+          {/* Add to cart CTA */}
+          <button
+            onClick={() => onAddToCart(item)}
+            className="bg-white/5 hover:bg-[#cca43b] border border-[#cca43b]/40 hover:border-[#cca43b] text-[#cca43b] hover:text-[#0f0e0c] font-bold text-[10px] uppercase tracking-wider py-2 px-3.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm shadow-[#cca43b]/5"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            {t.addTrayBtn}
+          </button>
+
+        </div>
+
+      </div>
+    </motion.div>
   );
 }

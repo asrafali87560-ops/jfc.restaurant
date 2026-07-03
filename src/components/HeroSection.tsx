@@ -1,12 +1,16 @@
 import React from 'react';
 import { Flame, Star, Award, ShieldAlert, Sparkles, MapPin } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Language, translations } from '../data/translations';
 
 interface HeroSectionProps {
   onScrollToSection: (sectionId: string) => void;
+  lang: Language;
 }
 
-export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
+export default function HeroSection({ onScrollToSection, lang }: HeroSectionProps) {
+  const t = translations[lang].hero;
+
   return (
     <div className="relative min-h-[90vh] flex flex-col justify-center bg-[#0a0907] overflow-hidden">
       {/* Background patterns */}
@@ -30,7 +34,7 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
               className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-900/40 to-yellow-900/20 border border-amber-600/30 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#cca43b] font-mono"
             >
               <Sparkles className="h-4.5 w-4.5 text-[#cca43b]" />
-              Authentic Indian Culinary Legacy • Ghaziabad
+              {t.tagline}
             </motion.div>
 
             <div className="space-y-4">
@@ -38,23 +42,19 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] leading-[1.05] font-extrabold text-white tracking-tight"
+                className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] font-extrabold text-white tracking-tight"
               >
-                Where <span className="text-[#cca43b] italic font-normal">Taste</span> <br className="hidden sm:inline" />
-                Meets Custom <br className="hidden sm:inline" />
-                <span className="relative z-10 inline-block">
-                  Craftsmanship.
-                  <span className="absolute left-0 bottom-1 w-full h-2.5 bg-[#cca43b]/20 -z-10" />
-                </span>
+                {t.titleLine1} <br />
+                <span className="text-[#cca43b] italic font-normal">{t.titleLine2}</span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="text-gray-300 font-sans text-base sm:text-lg md:text-xl max-w-xl leading-relaxed font-light"
+                className="text-gray-300 font-sans text-sm sm:text-base md:text-lg max-w-xl leading-relaxed font-light"
               >
-                For over three years, serving Ghaziabad’s absolute finest, "too yum" soya-based delicacies. Melt-in-your-mouth <span className="text-[#cca43b] font-medium">Legends of Chaap</span> and classic slow-simmered family feasts, prepared with royal devotion.
+                {t.description}
               </motion.p>
             </div>
 
@@ -63,18 +63,20 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-start gap-4 max-w-lg shadow-inner backdrop-blur-sm"
+              className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-start gap-4 max-w-lg shadow-inner backdrop-blur-sm text-left"
             >
               <div className="flex flex-col gap-1 text-amber-400">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
+                    <Star key={i} className="h-4 w-4 fill-current animate-pulse" />
                   ))}
                 </div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400">Featured Review</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400">Google Review</span>
               </div>
               <p className="text-xs text-gray-400 italic font-light leading-relaxed">
-                "I order from here regularly specially their chaap... Eating from here from last 2-3 years. The overall food was delicious too yum and counter wale bhaiya RCB k fan hai..."
+                {lang === 'en' 
+                  ? '"I order from here regularly specially their chaap... Eating from here from last 2-3 years. The overall food was delicious too yum and counter wale bhaiya RCB k fan hai..."'
+                  : '"मैं यहाँ से अक्सर आर्डर करता हूँ, विशेष रूप से इनकी चाप... पिछले 2-3 वर्षों से यहाँ का स्वाद चख रहा हूँ। भोजन बहुत स्वादिष्ट और कड़क था, और काउंटर वाले भैया आरसीबी के फैन हैं..."'}
               </p>
             </motion.div>
 
@@ -87,15 +89,15 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
             >
               <button
                 onClick={() => onScrollToSection('menu')}
-                className="bg-gradient-to-r from-[#cca43b] to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0f0e0c] font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-lg shadow-lg shadow-[#cca43b]/10 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="bg-gradient-to-r from-[#cca43b] to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0f0e0c] font-semibold text-xs uppercase tracking-wider py-4 px-8 rounded-lg shadow-lg shadow-[#cca43b]/10 transition-all transform hover:-translate-y-0.5 cursor-pointer"
               >
-                Explore Menu
+                {t.exploreMenu}
               </button>
               <button
-                onClick={() => onScrollToSection('counter-bhaiya')}
-                className="bg-white/5 hover:bg-white/10 text-[#cca43b] border border-[#cca43b]/40 hover:border-[#cca43b] font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                onClick={() => onScrollToSection('booking')}
+                className="bg-white/5 hover:bg-white/10 text-[#cca43b] border border-[#cca43b]/40 hover:border-[#cca43b] font-semibold text-xs uppercase tracking-wider py-4 px-8 rounded-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
               >
-                Meet Counter Bhaiya 💪
+                {t.reserveTable}
               </button>
             </motion.div>
           </div>
@@ -106,7 +108,7 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative w-full aspect-square max-w-[450px] mx-auto lg:max-w-none"
+              className="relative w-full aspect-square max-w-[420px] mx-auto lg:max-w-none"
             >
               {/* Outer glowing gold ring */}
               <div className="absolute inset-0 rounded-full border border-[#cca43b]/20 animate-[spin_40s_linear_infinite] z-0" />
@@ -132,8 +134,8 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
                   <Flame className="h-4.5 w-4.5 text-[#cca43b] fill-current" />
                 </div>
                 <div className="text-left">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-gray-400">Signature dish</span>
-                  <p className="text-xs font-bold text-white leading-none">Famous Soya Chaap</p>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-gray-400">JFC Signature</span>
+                  <p className="text-xs font-bold text-white leading-none">Afghani Malai Chaap</p>
                 </div>
               </motion.div>
 
@@ -147,8 +149,8 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
                   <Star className="h-4.5 w-4.5 text-amber-400 fill-current" />
                 </div>
                 <div className="text-left">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-gray-400">Google Rating</span>
-                  <p className="text-xs font-bold text-white leading-none">4.9/5 • Yum Choice</p>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-gray-400">Google rating</span>
+                  <p className="text-xs font-bold text-white leading-none">4.9/5 • 1,500+ Reviews</p>
                 </div>
               </motion.div>
             </motion.div>
@@ -157,37 +159,53 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
         </div>
 
         {/* Feature Grid beneath Hero */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-24 border-t border-white/5 mt-8 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-20 border-t border-white/5 mt-16 text-left">
           
-          <div className="space-y-2 p-4 rounded-xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
+          <div className="space-y-2 p-5 rounded-2xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
             <div className="text-[#cca43b] text-xl font-bold font-serif mb-1">01</div>
-            <h3 className="text-white font-medium text-base font-serif">Legendary Chaap</h3>
+            <h3 className="text-white font-medium text-sm font-serif uppercase tracking-wide">
+              {lang === 'en' ? 'Legendary Soya Chaap' : 'सुप्रसिद्ध सोया चाप'}
+            </h3>
             <p className="text-xs text-gray-400 leading-relaxed font-light">
-              Made from premium soy protein, marinated in house-ground secret masalas, slow-grilled on real clay ovens.
+              {lang === 'en' 
+                ? 'Made from premium soy protein, marinated in house-ground secret masalas, slow-grilled on real tandoori fire.'
+                : 'प्रीमियम सोया प्रोटीन से निर्मित, हमारे घर के पिसे गुप्त मसालों में लिपटी और कोयले की भट्टी पर भुनी हुई स्वादिष्ट चाप।'}
             </p>
           </div>
 
-          <div className="space-y-2 p-4 rounded-xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
+          <div className="space-y-2 p-5 rounded-2xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
             <div className="text-[#cca43b] text-xl font-bold font-serif mb-1">02</div>
-            <h3 className="text-white font-medium text-base font-serif">Cozy Medium Space</h3>
+            <h3 className="text-white font-medium text-sm font-serif uppercase tracking-wide">
+              {lang === 'en' ? 'Cozy Premium Seating' : 'आरामदायक डाइनिंग स्पेस'}
+            </h3>
             <p className="text-xs text-gray-400 leading-relaxed font-light">
-              "Not too big, not too small." A perfect intimate setting that prioritizes flawless family comfort and elite hygiene.
+              {lang === 'en' 
+                ? '"Not too big, not too small." An intimate, clean dining layout crafted for sweet family get-togethers.'
+                : '"न बहुत बड़ा, न बहुत छोटा।" परिवारों और दोस्तों के लिए सुरुचिपूर्ण ढंग से तैयार की गयी साफ़ बैठक व्यवस्था।'}
             </p>
           </div>
 
-          <div className="space-y-2 p-4 rounded-xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
+          <div className="space-y-2 p-5 rounded-2xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
             <div className="text-[#cca43b] text-xl font-bold font-serif mb-1">03</div>
-            <h3 className="text-white font-medium text-base font-serif">Clean Muscle Macros</h3>
+            <h3 className="text-white font-medium text-sm font-serif uppercase tracking-wide">
+              {t.bhaiyaVibe}
+            </h3>
             <p className="text-xs text-gray-400 leading-relaxed font-light">
-              Highly sought-after protein-packed dishes for our local gym-rat crowd. Premium nourishment with spectacular taste.
+              {lang === 'en' 
+                ? 'High-protein tips and cheerful cricketing loyalty served fresh by our bodybuilding, RCB-loving Counter Bhaiya.'
+                : 'बॉडीबिल्डिंग और आरसीबी के प्रशंसकों के पसंदीदा हमारे काउंटर भैया द्वारा दिए गए फिटनेस टिप्स और मजेदार खेल चर्चा।'}
             </p>
           </div>
 
-          <div className="space-y-2 p-4 rounded-xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
+          <div className="space-y-2 p-5 rounded-2xl border border-white/5 hover:border-[#cca43b]/20 transition-all bg-white/2 hover:bg-white/5">
             <div className="text-[#cca43b] text-xl font-bold font-serif mb-1">04</div>
-            <h3 className="text-white font-medium text-base font-serif">Stellar Service</h3>
+            <h3 className="text-white font-medium text-sm font-serif uppercase tracking-wide">
+              {t.hygienicKitchen}
+            </h3>
             <p className="text-xs text-gray-400 leading-relaxed font-light">
-              Prompt delivery, impeccable dine-in service, and great conversation with our energetic, sports-loving team.
+              {lang === 'en' 
+                ? 'Absolute commitment to 100% vegetarian culinary standards, featuring rich double cream and pure Amul butter.'
+                : '100% शुद्ध शाकाहारी भोजन के साथ असली अमूल मक्खन और ताजी मलाई का भरपूर उपयोग।'}
             </p>
           </div>
 

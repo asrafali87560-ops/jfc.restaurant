@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Menu, X, Flame } from 'lucide-react';
+import { ShoppingBag, Menu, X, Flame, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Language, translations } from '../data/translations';
 
 interface NavbarProps {
   cartCount: number;
   onOpenCart: () => void;
   onScrollToSection: (sectionId: string) => void;
   activeSection: string;
+  lang: Language;
+  onToggleLang: () => void;
 }
 
 export default function Navbar({
   cartCount,
   onOpenCart,
   onScrollToSection,
-  activeSection
+  activeSection,
+  lang,
+  onToggleLang
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const t = translations[lang].navbar;
 
   const navItems = [
-    { id: 'home', name: 'Home' },
-    { id: 'specials', name: 'Legendary Chaaps' },
-    { id: 'menu', name: 'Menu' },
-    { id: 'counter-bhaiya', name: "Bhaiya's Corner" },
-    { id: 'booking', name: 'Book Table' },
-    { id: 'reviews', name: 'Reviews' }
+    { id: 'home', name: t.home },
+    { id: 'specials', name: t.specials },
+    { id: 'menu', name: t.menu },
+    { id: 'counter-bhaiya', name: t.counterBhaiya },
+    { id: 'booking', name: t.booking },
+    { id: 'reviews', name: t.reviews }
   ];
 
   const handleItemClick = (id: string) => {
@@ -35,6 +41,7 @@ export default function Navbar({
     <nav className="sticky top-0 z-50 bg-[#0f0e0c]/90 backdrop-blur-md border-b border-[#cca43b]/10 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
+          
           {/* Logo / Brand */}
           <div 
             onClick={() => handleItemClick('home')}
@@ -43,7 +50,7 @@ export default function Navbar({
             <div className="bg-[#cca43b] text-[#0f0e0c] p-2 rounded-lg group-hover:scale-105 transition-transform">
               <Flame className="h-6 w-6 fill-current animate-pulse" />
             </div>
-            <div>
+            <div className="text-left">
               <span className="font-serif text-xl sm:text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-[#cca43b]">
                 JFC RESTAURANT
               </span>
@@ -54,7 +61,7 @@ export default function Navbar({
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 font-sans">
+          <div className="hidden md:flex items-center gap-6 font-sans">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -75,12 +82,25 @@ export default function Navbar({
             ))}
           </div>
 
-          {/* Cart & Actions */}
-          <div className="flex items-center gap-4">
+          {/* Actions & Buttons */}
+          <div className="flex items-center gap-3.5">
+            
+            {/* Language Switcher Toggle */}
+            <button
+              onClick={onToggleLang}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/5 hover:bg-[#cca43b]/10 border border-white/10 hover:border-[#cca43b]/30 text-xs font-bold tracking-wide text-[#cca43b] transition-all cursor-pointer font-sans"
+              title={lang === 'en' ? 'Switch to Hindi / हिन्दी' : 'अंग्रेजी (English) में बदलें'}
+              id="language-toggle-btn"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              <span>{lang === 'en' ? 'हिन्दी' : 'EN'}</span>
+            </button>
+
+            {/* Meal Tray / Cart */}
             <button
               onClick={onOpenCart}
               className="relative p-2.5 rounded-full hover:bg-white/5 border border-white/10 hover:border-[#cca43b]/40 text-gray-300 hover:text-[#cca43b] transition-all group cursor-pointer"
-              title="View Meal Tray"
+              title={t.mealTray}
               id="meal-tray-btn"
             >
               <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -95,11 +115,12 @@ export default function Navbar({
               )}
             </button>
 
+            {/* Book table quick link */}
             <button
               onClick={() => handleItemClick('booking')}
               className="hidden lg:block bg-gradient-to-r from-[#cca43b] to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0f0e0c] font-semibold text-xs uppercase tracking-wider py-2.5 px-5 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 shadow-md shadow-[#cca43b]/10 cursor-pointer"
             >
-              Book A Table
+              {t.bookButton}
             </button>
 
             {/* Mobile Menu Toggle */}
@@ -111,6 +132,7 @@ export default function Navbar({
                 {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
+
           </div>
         </div>
       </div>
@@ -123,7 +145,7 @@ export default function Navbar({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#161411] border-b border-[#cca43b]/10 overflow-hidden"
+            className="md:hidden bg-[#161411] border-b border-[#cca43b]/10 overflow-hidden text-left"
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               {navItems.map((item) => (
@@ -139,12 +161,28 @@ export default function Navbar({
                   {item.name}
                 </button>
               ))}
-              <div className="pt-4 px-4">
+
+              {/* Mobile Language Toggle row */}
+              <div className="pt-4 pb-2 px-4 border-t border-white/5 flex items-center justify-between">
+                <span className="text-xs text-gray-500 font-mono uppercase tracking-wider">Language / भाषा:</span>
+                <button
+                  onClick={() => {
+                    onToggleLang();
+                    setIsOpen(false);
+                  }}
+                  className="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-bold text-[#cca43b] flex items-center gap-1.5"
+                >
+                  <Globe className="h-3.5 w-3.5" />
+                  {lang === 'en' ? 'हिन्दी (Hindi)' : 'English (EN)'}
+                </button>
+              </div>
+
+              <div className="pt-2">
                 <button
                   onClick={() => handleItemClick('booking')}
                   className="w-full text-center bg-gradient-to-r from-[#cca43b] to-amber-600 text-[#0f0e0c] font-semibold text-xs uppercase tracking-wider py-3 rounded-lg shadow-lg"
                 >
-                  Book A Table
+                  {t.bookButton}
                 </button>
               </div>
             </div>

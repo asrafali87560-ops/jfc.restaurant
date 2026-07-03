@@ -68,6 +68,14 @@ export const MENU_ITEMS: MenuItem[] = [
     isHighProtein: true,
     spiceLevel: 1,
     proteinGrams: 24,
+    nutrition: {
+      calories: 380,
+      protein: 24,
+      carbs: 14,
+      fat: 26,
+      allergens: ['Soy', 'Dairy', 'Cashew Nuts'],
+      ingredients: ['High-protein Soya flour', 'Cashew paste', 'Fresh double cream', 'Green cardamom', 'Amul Butter']
+    },
   },
   {
     id: 'c2',
@@ -82,6 +90,14 @@ export const MENU_ITEMS: MenuItem[] = [
     isHighProtein: true,
     spiceLevel: 3,
     proteinGrams: 22,
+    nutrition: {
+      calories: 320,
+      protein: 22,
+      carbs: 18,
+      fat: 16,
+      allergens: ['Soy', 'Dairy'],
+      ingredients: ['Textured soya chunks', 'Thick hung curd', 'Kashmiri red chilli', 'Cold-pressed mustard oil', 'Kasturi methi', 'Chef secret spice blend']
+    },
   },
   {
     id: 'c3',
@@ -109,6 +125,14 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 2,
     isHighProtein: true,
     proteinGrams: 18,
+    nutrition: {
+      calories: 450,
+      protein: 18,
+      carbs: 48,
+      fat: 20,
+      allergens: ['Gluten (Wheat)', 'Soy', 'Dairy'],
+      ingredients: ['Fine wheat rumali flatbread', 'Afghani soy chaap chunks', 'Double cream & cashew marinade', 'Sliced red onions', 'Spicy green mint chutney']
+    },
   },
   {
     id: 'c5',
@@ -174,6 +198,14 @@ export const MENU_ITEMS: MenuItem[] = [
     isVeg: true,
     isPopular: true,
     spiceLevel: 2,
+    nutrition: {
+      calories: 390,
+      protein: 14,
+      carbs: 12,
+      fat: 32,
+      allergens: ['Dairy', 'Cashew Nuts'],
+      ingredients: ['Fresh dairy cottage cheese cubes', 'Cashew-nut paste', 'Vine-ripened tomatoes', 'Raw wild honey', 'Amul fresh cream', 'Kasuri methi']
+    },
   },
   {
     id: 'm3',
@@ -200,6 +232,14 @@ export const MENU_ITEMS: MenuItem[] = [
     image: butterNaanImg,
     isVeg: true,
     spiceLevel: 1,
+    nutrition: {
+      calories: 280,
+      protein: 7,
+      carbs: 42,
+      fat: 9,
+      allergens: ['Gluten (Wheat)', 'Dairy'],
+      ingredients: ['Leavened fine wheat flour', 'Yogurt starter', 'Melted Amul butter glaze', 'Kalonji (Nigella seeds)']
+    },
   },
   {
     id: 'b2',
@@ -212,6 +252,14 @@ export const MENU_ITEMS: MenuItem[] = [
     isVeg: true,
     isPopular: true,
     spiceLevel: 1,
+    nutrition: {
+      calories: 295,
+      protein: 8,
+      carbs: 43,
+      fat: 10,
+      allergens: ['Gluten (Wheat)', 'Dairy'],
+      ingredients: ['Leavened fine wheat flour', 'Roasted minced garlic', 'Amul butter glaze', 'Fresh coriander leaves']
+    },
   },
   {
     id: 'b3',
@@ -223,6 +271,14 @@ export const MENU_ITEMS: MenuItem[] = [
     image: lacchaParathaImg,
     isVeg: true,
     spiceLevel: 1,
+    nutrition: {
+      calories: 310,
+      protein: 6,
+      carbs: 38,
+      fat: 14,
+      allergens: ['Gluten (Whole Wheat)', 'Dairy (Ghee)'],
+      ingredients: ['Whole wheat flour (Atta)', 'Layered pure cow ghee', 'Ajwain (Carom seeds)']
+    },
   },
 
   // --- INDO-CHINESE ---
